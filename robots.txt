@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://suwen-edu.cn/sitemap.xml
