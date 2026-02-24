@@ -203,3 +203,12 @@ img{max-width:100%;display:block}
   .menu-toggle{display:block}
   .footer-inner{flex-direction:column;text-align:center}
 }
+
+/* ===== Enhanced Footer (合规) ===== */
+.footer-company{display:flex;flex-direction:column;gap:4px}
+.footer-icp a{color:#94a3b8;font-size:.82rem}
+.footer-icp a:hover{color:#fff}
+.footer-bottom{
+  margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);
+  text-align:center;font-size:.8rem;color:#64748b;
+}
