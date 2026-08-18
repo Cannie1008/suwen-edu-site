@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>透明度报告 - 悠米一下</title>
-<meta name="description" content="公开我们的接单率、拒单率、获批率，包括难看的数字。一份只有好数字的报告，等于没有报告。">
-<link rel="canonical" href="https://suwen-edu.cn/transparency.html">
+<title>项目图谱 - 悠米一下</title>
+<meta name="description" content="26 类主要项目的层级、主管部门、核心门槛与支持力度对照。政策资源库 700+ 项目的公开摘要版。">
+<link rel="canonical" href="https://suwen-edu.cn/atlas.html">
 <meta property="og:type" content="website">
-<meta property="og:title" content="透明度报告 - 悠米一下">
-<meta property="og:description" content="公开我们的接单率、拒单率、获批率，包括难看的数字。一份只有好数字的报告，等于没有报告。">
+<meta property="og:title" content="项目图谱 - 悠米一下">
+<meta property="og:description" content="26 类主要项目的层级、主管部门、核心门槛与支持力度对照。政策资源库 700+ 项目的公开摘要版。">
 <style>:root{
   --paper:#FAFAF7; --bone:#F0EEE6; --card:#FFFFFF;
   --ink:#141413; --ink2:#53504A; --ink3:#7C7973;
@@ -830,41 +830,49 @@ img.qr{width:132px;height:132px;border-radius:10px;border:1px solid var(--line2)
 
 
 <header class="hero hero--page"><div class="wrap">
-  <div class="crumb">准则 · 透明度 <span class="badge draft">首期筹备中</span></div>
-  <h1>包括<u>难看的数字</u></h1>
-  <p class="sub">这个行业没有一家机构公开过自己的真实获批率。都在说"成功率很高"，没人说是多少、分母是什么、失败的怎么算。我们打算每年公开一次，包括我们做砸的。</p>
+  <div class="crumb">工具 · 项目图谱</div>
+  <h1>你到底<u>够得着什么</u>，<br>先在这张表上找一遍</h1>
+  <p class="sub">大多数企业不是拿不到钱，是不知道自己符合哪些项目的条件。这张表按能力域把主要项目摊平，列出层级、主管部门、核心门槛和支持力度 —— 是我们 700+ 政策资源库的公开摘要版。</p>
+  <div class="stats">
+    <div class="stat"><b>26</b><span>类主要项目</span></div>
+    <div class="stat"><b>6</b><span>个能力域</span></div>
+    <div class="stat"><b>700+</b><span>完整库内项目</span></div>
+  </div>
 </div></header>
 
-<section class="sec sec--top"><div class="wrap">
-  <div class="eyebrow">报告口径</div>
-  <h2 class="h">我们准备公开的五组数字</h2>
-  <div class="tbl"><table>
-    <tr><th>项目</th><th>说明</th><th>年度数值</th></tr>
-    <tr><td>评估总量</td><td>进入立项评估的项目总数</td><td class="pend">待填</td></tr>
-    <tr><td>L0 拒单量与占比</td><td>因触及执业准则红线直接拒绝的数量，分原因</td><td class="pend">待填</td></tr>
-    <tr><td>L1 劝退量与占比</td><td>建议先做能力建设、当年不申报的数量</td><td class="pend">待填</td></tr>
-    <tr><td>实际承接量</td><td>签约并完成申报的项目数</td><td class="pend">待填</td></tr>
-    <tr><td>获批率</td><td>获批数 ÷ 实际承接量。分母不剔除失败项目</td><td class="pend">待填</td></tr>
+<section class="sec sec--bone"><div class="wrap">
+  <div class="eyebrow">按能力域筛选</div>
+  <h2 class="h">先看你在哪个域上有积累</h2>
+  <p class="lede">项目不是按行业分的，是按<strong>企业能力维度</strong>分的。你在哪个域上有真实积累，就该往哪个域的项目上使劲 —— 这也是我们资源库的索引方式。</p>
+  <div class="filters"><button data-f="全部" aria-pressed="true">全部</button><button data-f="技术创新">技术创新</button><button data-f="梯度培育">梯度培育</button><button data-f="数字化">数字化</button><button data-f="绿色低碳">绿色低碳</button><button data-f="平台载体">平台载体</button><button data-f="资金奖补">资金奖补</button></div>
+  <div class="tbl" style="margin-top:26px"><table>
+    <tr><th>项目</th><th>层级</th><th>主管</th><th>核心门槛</th><th>支持力度</th></tr>
+    <tr data-g="技术创新"><td><b>高新技术企业认定</b></td><td>国家</td><td>科技／税务／财政</td><td class="rmk">研发费占比 · 高新收入 60% · 知产 Ⅰ／Ⅱ 类</td><td>所得税 15%</td></tr><tr data-g="技术创新"><td><b>科技型中小企业</b></td><td>国家</td><td>科技部门</td><td class="rmk">人员 ≤500 · 研发费占比</td><td>加计扣除 100%</td></tr><tr data-g="技术创新"><td><b>省级重点研发计划</b></td><td>省</td><td>科技厅</td><td class="rmk">技术先进性 · 联合体</td><td>50–500 万</td></tr><tr data-g="技术创新"><td><b>首台（套）重大技术装备</b></td><td>省／国家</td><td>工信</td><td class="rmk">国内首创 · 已销售未规模化</td><td>保费补贴／奖补</td></tr><tr data-g="技术创新"><td><b>技术合同认定登记</b></td><td>省</td><td>科技厅</td><td class="rmk">真实技术交易</td><td>免增值税 · 加计</td></tr><tr data-g="技术创新"><td><b>科技成果评价</b></td><td>第三方</td><td>科技部门备案</td><td class="rmk">成果真实性 · 技术水平</td><td>申报支撑材料</td></tr><tr data-g="梯度培育"><td><b>创新型中小企业</b></td><td>省</td><td>工信厅</td><td class="rmk">评价得分制</td><td>入库，梯度第一级</td></tr><tr data-g="梯度培育"><td><b>专精特新中小企业</b></td><td>省</td><td>工信厅</td><td class="rmk">专业化 · 细分市场 · 研发投入</td><td>省级奖补</td></tr><tr data-g="梯度培育"><td><b>专精特新小巨人</b></td><td>国家</td><td>工信部</td><td class="rmk">省级前置 · 主导产品占有率</td><td>中央财政奖补</td></tr><tr data-g="梯度培育"><td><b>制造业单项冠军</b></td><td>国家</td><td>工信部</td><td class="rmk">细分产品占有率全球前列</td><td>国家级荣誉 · 奖补</td></tr><tr data-g="数字化"><td><b>DCMM 数据管理能力成熟度</b></td><td>国家</td><td>工信</td><td class="rmk">八大能力域分级</td><td>1–5 级贯标</td></tr><tr data-g="数字化"><td><b>两化融合管理体系</b></td><td>国家</td><td>工信</td><td class="rmk">贯标 + 评定</td><td>AA／AAA 分级</td></tr><tr data-g="数字化"><td><b>智能工厂</b></td><td>省／国家</td><td>工信</td><td class="rmk">产线数据打通 · 系统集成</td><td>省级奖补</td></tr><tr data-g="数字化"><td><b>数字化车间</b></td><td>省</td><td>工信</td><td class="rmk">单车间数字化改造</td><td>智能工厂前置</td></tr><tr data-g="数字化"><td><b>灯塔工厂</b></td><td>国际</td><td>WEF</td><td class="rmk">端到端数智化 · 可量化成效</td><td>全球标杆</td></tr><tr data-g="绿色低碳"><td><b>绿色工厂</b></td><td>省／国家</td><td>工信</td><td class="rmk">能源／资源／环境指标</td><td>绿色制造名单</td></tr><tr data-g="绿色低碳"><td><b>绿色供应链管理企业</b></td><td>国家</td><td>工信</td><td class="rmk">供应链绿色管理体系</td><td>名单 · 采购加分</td></tr><tr data-g="绿色低碳"><td><b>CBAM 碳边境调节</b></td><td>出海</td><td>欧盟</td><td class="rmk">产品碳足迹核算与申报</td><td>出口合规门槛</td></tr><tr data-g="平台载体"><td><b>省级工程研究中心</b></td><td>省</td><td>发改委</td><td class="rmk">研发条件 · 承接能力</td><td>建设经费</td></tr><tr data-g="平台载体"><td><b>企业技术中心</b></td><td>省／国家</td><td>发改／工信</td><td class="rmk">研发机构建制 · 投入强度</td><td>设备进口免税</td></tr><tr data-g="平台载体"><td><b>博士后科研工作站</b></td><td>国家</td><td>人社部</td><td class="rmk">科研平台 · 项目 · 导师</td><td>人才补贴</td></tr><tr data-g="平台载体"><td><b>省级工业设计中心</b></td><td>省</td><td>工信厅</td><td class="rmk">设计投入 · 设计成果转化</td><td>省级奖补</td></tr><tr data-g="资金奖补"><td><b>技术改造设备奖补</b></td><td>省／市</td><td>工信／财政</td><td class="rmk">设备投资额 · 技改备案</td><td>按投资比例</td></tr><tr data-g="资金奖补"><td><b>中央预算内投资</b></td><td>国家</td><td>发改委</td><td class="rmk">国家专项方向 · 项目成熟度</td><td>单项千万级</td></tr><tr data-g="资金奖补"><td><b>超长期特别国债</b></td><td>国家</td><td>发改／财政</td><td class="rmk">设备更新 · 以旧换新</td><td>大额贴息／补助</td></tr><tr data-g="资金奖补"><td><b>残保金优惠与核算</b></td><td>全国</td><td>税务／残联</td><td class="rmk">安置比例核算</td><td>可退可减</td></tr>
   </table></div>
-  <div class="prose" style="margin-top:32px">
-    <p><strong>关键在分母。</strong>行业里说"成功率 95%"的机构，通常是把没把握的项目提前劝退、把中途放弃的剔除、只统计最后提交的那些。这么算，谁都能到 95%。</p>
-    <p>我们的分母是<strong>实际承接量</strong>，签了约就进分母，做砸了也进分母。同时把劝退量单独列出来 —— 这个数字反而更能说明我们在坚持什么。</p>
-  </div>
   <div class="notice">
-    <b>需要你的真实台账。</b>这一页的价值百分之百取决于数字是真的。给我你们的年度台账（评估量、拒单量、承接量、获批量），我按这个结构填进去。如果某些数字不方便公开，告诉我哪些，我们调整口径 —— 但不建议只留好看的那几个。
+    <b>门槛列是简化的判断锚点，不是完整条件。</b>每个项目的正式条件都在当年申报指南里，各省口径还有差异。这张表的用途是<b>快速排除明显够不着的、锁定值得细算的</b>。要逐项精算，用课程里的《申报条件综合评估决策台账》。
   </div>
 </div></section>
 
-<section class="sec sec--bone"><div class="wrap">
-  <div class="eyebrow">为什么做这件事</div>
-  <h2 class="h">这是我们能提供的、唯一无法伪造的凭据</h2>
-  <div class="prose" style="margin-top:20px">
-    <p>我们说自己站在合规这一边，说自己拒绝踩线项目，说自己不做包过承诺。这些话每一家都会说。</p>
-    <p>能把话变成凭据的，只有数字：<strong>如果我们真的在拒单，拒单率就不会是零。</strong>一家宣称严守合规、但拒单率常年为零的机构，说明它从来没遇到过踩线的项目，或者它的红线是假的。</p>
-    <p>公开这个数字，等于把自己置于一个持续被检验的位置。这正是我们想要的 —— 一个做基础设施的机构，如果自己不受约束，那基础设施就是笑话。</p>
+<section class="sec"><div class="wrap">
+  <div class="eyebrow">怎么用这张表</div>
+  <h2 class="h">从「用政策找项目「，转成「用逻辑设计项目「</h2>
+  <div class="grid3">
+    <div class="g3"><div class="k">第一步</div><h3>先定域，再挑项目</h3><p>看清自己在技术创新、数字化、绿色低碳哪个域上有真东西。没积累的域，硬报就是包装。</p></div>
+    <div class="g3"><div class="k">第二步</div><h3>沿梯度往上排</h3><p>科技型中小 → 创新型 → 专精特新 → 小巨人 → 单项冠军，是一条有前置关系的路。跳级报，多半白费。</p></div>
+    <div class="g3"><div class="k">第三步</div><h3>倒推备料时间</h3><p>知产布局、费用归集、体系建设都不是三周能补的。对着申报日历往前推三个月。</p><a class="arrow" href="calendar.html">看申报日历 →</a></div>
   </div>
-  <a class="arrow" href="principles.html">看我们的执业准则 →</a>
 </div></section>
+
+<script>
+(function(){
+  var b=document.querySelectorAll('.filters button'), r=document.querySelectorAll('tr[data-g]');
+  b.forEach(function(x){x.addEventListener('click',function(){
+    var f=x.dataset.f; b.forEach(function(y){y.setAttribute('aria-pressed',y===x)});
+    r.forEach(function(t){t.style.display=(f==='全部'||t.dataset.g===f)?'':'none'});
+  })});
+})();
+</script>
 
 
 <footer class="foot"><div class="wrap">
