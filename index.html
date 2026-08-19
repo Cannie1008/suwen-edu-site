@@ -45,32 +45,54 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 img{max-width:100%;display:block}
 
 /* ═══ NAV ═══ */
-.nav{position:sticky;top:0;z-index:100;background:var(--paper);border-bottom:1px solid var(--line)}
-.nav .wrap{display:flex;align-items:center;gap:6px;height:64px}
-.nav .brand{font-weight:700;font-size:19px;letter-spacing:.09em;text-decoration:none;margin-right:26px;white-space:nowrap}
-.nav .grow{margin-left:auto}
+.nav{position:sticky;top:0;z-index:100;background:var(--paper);border-bottom:1px solid transparent;
+  transition:border-color .3s,box-shadow .3s}
+.nav.stuck{border-bottom-color:var(--line);box-shadow:0 1px 16px rgba(20,20,19,.05)}
+.nav .wrap{display:flex;align-items:center;gap:2px;height:72px}
+.nav .brand{font-weight:700;font-size:20px;letter-spacing:.02em;text-decoration:none;
+  white-space:nowrap;margin-right:8px}
+.nav .grow{flex:1}
 .nitem{position:relative}
 .nitem>a,.nitem>button{
-  display:inline-block;color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:600;
-  padding:8px 13px;border:none;background:none;font-family:inherit;cursor:pointer;
-  border-radius:7px;transition:background .15s;white-space:nowrap;
+  display:inline-block;color:var(--ink);text-decoration:none;font-size:15px;font-weight:500;
+  padding:9px 15px;border:none;background:none;font-family:inherit;cursor:pointer;
+  border-radius:8px;transition:background .15s;white-space:nowrap;letter-spacing:.01em;
 }
 .nitem>a:hover,.nitem>button:hover{background:var(--bone)}
-.nitem>button::after{content:"";display:inline-block;width:5px;height:5px;margin-left:7px;vertical-align:2px;
-  border-right:1.3px solid var(--ink2);border-bottom:1.3px solid var(--ink2);transform:rotate(45deg)}
+.nitem>button::after{content:"";display:inline-block;width:6px;height:6px;margin-left:8px;
+  vertical-align:2px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+  transform:rotate(45deg) translate(-1px,-1px);opacity:.5;transition:opacity .15s}
+.nitem:hover>button::after{opacity:.9}
+
 .drop{
-  position:absolute;top:calc(100% + 8px);left:0;min-width:246px;
-  background:var(--card);border:1px solid var(--line);border-radius:13px;padding:10px;
-  box-shadow:0 8px 28px rgba(20,20,19,.07);
-  opacity:0;visibility:hidden;transform:translateY(-5px);transition:all .16s;
+  position:absolute;top:calc(100% + 10px);left:0;min-width:266px;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;
+  box-shadow:0 10px 34px rgba(20,20,19,.09);
+  opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .17s;
 }
+.drop--r{left:auto;right:0}
 .nitem:hover .drop,.nitem:focus-within .drop{opacity:1;visibility:visible;transform:translateY(0)}
-.drop .gl{font-size:10.5px;font-weight:700;letter-spacing:.16em;color:var(--ink3);padding:9px 12px 5px}
-.drop a{display:block;padding:8px 12px;border-radius:8px;font-size:14.5px;text-decoration:none;color:var(--ink);transition:background .14s}
+.drop .gl{font-size:10.5px;font-weight:700;letter-spacing:.15em;color:var(--ink3);padding:10px 12px 5px}
+.drop a{display:block;padding:9px 12px;border-radius:9px;font-size:14.6px;font-weight:500;
+  text-decoration:none;color:var(--ink);transition:background .14s}
 .drop a:hover{background:var(--bone)}
-.drop a small{display:block;font-size:13.2px;color:var(--ink3);margin-top:1px}
-.nbtn{background:var(--ink);color:var(--paper)!important;padding:9px 18px;border-radius:8px;font-size:14px;text-decoration:none;white-space:nowrap;transition:background .16s}
+.drop a small{display:block;font-size:12.8px;font-weight:400;color:var(--ink3);margin-top:2px}
+
+/* 分段式 CTA：主按钮 + 下拉段 */
+.navcta{display:flex;align-items:stretch;margin-left:14px;border-radius:9px;overflow:hidden;background:var(--ink)}
+.nbtn{color:var(--paper)!important;padding:10px 18px;font-size:14.6px;font-weight:600;
+  text-decoration:none;white-space:nowrap;transition:background .16s;display:flex;align-items:center}
 .nbtn:hover{background:var(--accent-dp)}
+.nbtn-split{width:34px;border:none;border-left:1px solid rgba(250,250,247,.22);background:none;
+  cursor:pointer;padding:0;transition:background .16s;position:relative}
+.nbtn-split::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;
+  border-right:1.5px solid var(--paper);border-bottom:1.5px solid var(--paper);
+  transform:translate(-50%,-70%) rotate(45deg)}
+.nbtn-split:hover{background:var(--accent-dp)}
+.navcta:hover .drop,.navcta:focus-within .drop{opacity:1;visibility:visible;transform:translateY(0)}
+.navcta .drop{top:calc(100% + 10px)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:5px}
 
 /* ═══ 通用 ═══ */
 .sec{padding-block:clamp(56px,7vw,96px)}
@@ -215,9 +237,12 @@ h3.h{font-weight:700;font-size:var(--d3);line-height:var(--d3lh)}
 .fbot{margin-top:44px;padding-top:24px;border-top:1px solid var(--line2);font-size:12.5px;color:var(--ink3);line-height:2}
 .fbot a{color:var(--ink2);text-decoration:none}
 
-@media(max-width:960px){
-  .nav .nitem:not(.keep):not(.burger){display:none}
+@media(max-width:1080px){
+  .nav .nitem:not(.keep){display:none}
   .nav .burger{display:flex}
+  .nav .wrap{height:64px}
+  .navcta .nbtn-split{display:none}
+  .navcta .drop{display:none}
   .row2{grid-template-columns:1fr;gap:12px}
   .tier{grid-template-columns:1fr;gap:5px} .tier .lv{padding-top:0}
 }
@@ -760,6 +785,7 @@ img.qr{width:132px;height:132px;border-radius:10px;border:1px solid var(--line2)
 </style></head><body>
 <nav class="nav"><div class="wrap">
 <a href="index.html" class="brand">悠米一下</a>
+<div class="grow"></div>
 <div class="nitem"><button>研究</button><div class="drop">
   <div class="gl">研究</div>
   <a href="thesis.html">核心观点<small>我们对这个行业的基本判断</small></a>
@@ -776,10 +802,13 @@ img.qr{width:132px;height:132px;border-radius:10px;border:1px solid var(--line2)
 </div></div>
 <div class="nitem"><button>学习</button><div class="drop">
   <div class="gl">课程</div>
-  <a href="course.html">项目申报实战辅导营<small>74 节 · ¥2680</small></a>
-  <div class="gl">配套</div>
+  <a href="course.html">项目申报实战辅导营<small>11 讲 74 节 · ¥2680</small></a>
   <a href="tools.html">执行工具与资源库<small>144 个工具 · 700+ 政策项目</small></a>
   <a href="cases.html">脱敏案例库<small>15 份带全套附件</small></a>
+  <div class="gl">免费查</div>
+  <a href="calendar.html">项目申报日历<small>22 类项目全年窗口期</small></a>
+  <a href="atlas.html">项目图谱<small>26 类项目门槛对照</small></a>
+  <a href="glossary.html">行业术语表<small>22 个高频黑话</small></a>
 </div></div>
 <div class="nitem"><button>行业</button><div class="drop">
   <div class="gl">基础设施</div>
@@ -789,43 +818,19 @@ img.qr{width:132px;height:132px;border-radius:10px;border:1px solid var(--line2)
   <a href="company.html">关于悠米一下</a>
   <a href="careers.html">加入我们</a>
 </div></div>
-<div class="nitem"><button>工具</button><div class="drop">
-  <div class="gl">免费查</div>
-  <a href="calendar.html">项目申报日历<small>22 类项目全年窗口期</small></a>
-  <a href="atlas.html">项目图谱<small>26 类项目门槛对照</small></a>
-  <a href="glossary.html">行业术语表<small>22 个高频黑话讲清楚</small></a>
-</div></div>
 <div class="nitem"><a href="blog.html">文章</a></div>
-<div class="grow"></div>
-<div class="nitem keep"><a href="course.html" class="nbtn">进入课程</a></div>
+<div class="nitem keep navcta">
+  <a href="course.html" class="nbtn">进入课程</a>
+  <button class="nbtn-split" aria-label="课程菜单"></button>
+  <div class="drop drop--r">
+    <a href="course.html#outline">完整课程目录<small>11 讲 74 节全部列出</small></a>
+    <a href="course.html#deliver">交付物清单<small>工具 · 案例 · 材料规范</small></a>
+    <a href="course.html#faq">常见问题<small>有效期、发票、退款</small></a>
+    <a href="course.html#buy">立即报名 ¥2680</a>
+  </div>
+</div>
 <button class="burger" id="bg" aria-expanded="false" aria-label="菜单" aria-controls="sheet"><i></i><i></i><i></i></button>
 </div></nav>
-<div class="sheet" id="sheet">
-  <div class="gl">研究</div>
-  <a href="thesis.html">核心观点<small>我们对这个行业的基本判断</small></a>
-  <a href="research.html">政策研判<small>比落地早三到六个月</small></a>
-  <a href="report.html">项目申报行业指数<small>行业第一份公开数据</small></a>
-  <div class="gl">准则</div>
-  <a href="principles.html">执业准则<small>十条，我们给自己划的红线</small></a>
-  <a href="commitment.html">项目承受度分级<small>什么接、什么不接，写死</small></a>
-  <a href="transparency.html">透明度报告<small>含我们失败的数字</small></a>
-  <a href="standard.html">全流程操作标准<small>行业内头一份</small></a>
-  <div class="gl">学习</div>
-  <a href="course.html">项目申报实战辅导营<small>74 节 · ¥2680</small></a>
-  <a href="tools.html">执行工具与资源库<small>144 个工具 · 700+ 政策项目</small></a>
-  <a href="cases.html">脱敏案例库<small>15 份带全套附件</small></a>
-  <div class="gl">工具</div>
-  <a href="calendar.html">项目申报日历<small>22 类项目全年窗口期</small></a>
-  <a href="atlas.html">项目图谱<small>26 类项目门槛对照</small></a>
-  <a href="glossary.html">行业术语表<small>22 个高频黑话</small></a>
-  <div class="gl">行业</div>
-  <a href="huangye.html">项目申报协作黄页<small>1000 家机构入驻</small></a>
-  <a href="ai.html">AI Skill 与合规审查</a>
-  <a href="company.html">关于悠米一下</a>
-  <a href="careers.html">加入我们</a>
-  <a href="blog.html">文章</a>
-  <a href="course.html" class="sbuy">进入课程 ¥2680</a>
-</div>
 
 
 <header class="hero"><div class="wrap">
