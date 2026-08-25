@@ -1,189 +1,248 @@
 /* ══════════════════════════════════════════════════════════════
-   suwen-edu.cn · 手机端观看体验补丁 v2
+   suwen-edu.cn · 手机端补丁 v3
    ──────────────────────────────────────────────────────────────
-   放置位置：仓库的 css/mobile.css
-   引入方式：每个 html 文件 </head> 之前加一行（可用配套脚本自动加）：
-       <link rel="stylesheet" href="css/mobile.css">
-   blog/ 等子目录里的页面写 ../css/mobile.css
+   本版基于真实源码重写，替换掉之前所有版本。
 
-   原则：不改任何 HTML 内容、不影响桌面端。
-   规则全部锁在窄屏 / 触屏媒体查询里，按区块分组，
-   哪一块不想要，整块删掉即可。
+   核心诊断：页面大量使用 padding-block / padding-inline / inset /
+   border-block 这几个较新的 CSS 逻辑属性。部分安卓浏览器内核
+   （华为等）不识别它们，整条声明被直接丢弃 —— 结果就是区块的
+   内边距、抽屉的定位全部消失。本文件把手机端用到的这些属性
+   逐条改写成通用长写法。
+
+   不改任何 HTML 内容，不影响桌面端（规则全在窄屏媒体查询内）。
+
+   配套文件：js/mobile.js —— 修复手机菜单，必须一起用。
    ══════════════════════════════════════════════════════════════ */
 
 
-/* ═══ 0. 病根：禁掉安卓浏览器的“智能字体放大” ═══════════════
-   截图里的一串怪象 —— 页脚链接大得离谱、正文忽大忽小、文字
-   撑破容器和相邻区块叠在一起、“长按识别”被屏幕右边裁掉、
-   汉堡按钮被挤出屏幕 —— 根源都是同一个：华为等安卓浏览器
-   会对没有明确禁止的页面按区块强行放大字体（font boosting），
-   而且不同区块放大倍数不一样，版式自然就碎了。
-   下面两条是标准关闭开关（第二条是老牌兜底写法，对个别
-   国产内核仍然需要）。关闭后，字号回到我们自己定的字阶。 */
+/* ═══ 0. 全局安全项（桌面端无视觉变化）══════════════════════ */
 
-html{
-  -webkit-text-size-adjust:100%;
-  text-size-adjust:100%;
-}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}  /* 禁掉安卓字体乱放大 */
 
-@media (max-width:1080px){
-  /* max-height 兜底：带 max-height 的元素会被放大算法跳过。
-     :where() 权重为 0，不会盖过任何现有样式；
-     排除 img/svg/video，不碰媒体元素。 */
-  body :where(:not(img):not(svg):not(video)){max-height:1000000px}
-}
-
-body{
-  overflow-x:clip;   /* 防止个别元素撑出横向滚动。用 clip 不用 hidden：
-                        hidden 会让 sticky 吸顶导航失效 */
-}
-
-/* 中英混排里的长编号（如备案号）、长链接允许断行，别顶破容器 */
-p,li,td,th,h1,h2,h3,h4,summary,figcaption,.lede,.prose,.fbot{
-  overflow-wrap:break-word;
-}
+p,li,td,th,h1,h2,h3,h4,summary,figcaption,.lede,.prose,.fbot{overflow-wrap:break-word}
 
 
-/* ═══ 1. 顶部导航：截图里三处可见问题 ═══════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   1. 兼容层：逻辑属性 → 通用长写法
+   这一节是本次修复的主体，请勿删除。
+   ══════════════════════════════════════════════════════════════ */
 
 @media (max-width:1080px){
 
-  /* ① 汉堡按钮被挤出屏幕右缘（每张截图右上角都切掉了一小半）。
-        让品牌名可收缩、按钮不许被压缩，行内永远装得下。 */
+  /* ── 页面主容器：左右留白（含刘海屏安全区）── */
+  .wrap{
+    padding-left:20px;
+    padding-right:20px;
+    padding-left:calc(20px + env(safe-area-inset-left));
+    padding-right:calc(20px + env(safe-area-inset-right));
+  }
+
+  /* ── 通用区块上下留白 ── */
+  .sec{padding-top:52px;padding-bottom:52px}
+  .hero{padding-top:44px;padding-bottom:36px}
+  .hero--page{padding-top:38px;padding-bottom:8px}
+  .post-hd{padding-top:36px;padding-bottom:8px}
+  .body{padding-top:32px;padding-bottom:8px}
+  .qrstrip{padding-top:40px;padding-bottom:36px}
+  .foot{padding-top:48px;padding-bottom:32px;padding-bottom:calc(32px + env(safe-area-inset-bottom))}
+
+  /* ── 星座 / 问题清单区：左右顶边就是这里丢的 ── */
+  .constel{padding-top:0;padding-bottom:0;padding-left:0;padding-right:0}
+  .cpanel{
+    padding-top:44px;padding-bottom:44px;
+    padding-left:20px;padding-right:20px;
+    padding-left:calc(20px + env(safe-area-inset-left));
+    padding-right:calc(20px + env(safe-area-inset-right));
+    border-radius:0;
+  }
+  .cstage{padding-top:8px;padding-bottom:8px;padding-left:0;padding-right:0}
+
+  /* ── 上下边框（原用 border-block）── */
+  .docmeta,.post-meta,.libstat{
+    border-top:1px solid var(--line2);
+    border-bottom:1px solid var(--line2);
+  }
+
+  /* ── 手机抽屉定位：原用 inset，不认就等于没定位 ── */
+  .sheet{
+    top:64px;right:0;bottom:0;left:0;
+    padding:8px 20px 60px;
+    padding-bottom:calc(60px + env(safe-area-inset-bottom));
+    overscroll-behavior:contain;
+  }
+
+  /* ── 灯箱 ── */
+  .lb{top:0;right:0;bottom:0;left:0;padding:14px}
+  .lb img,.lb .ph{max-height:70vh}
+
+  /* ── flex 的 gap 兜底 ──────────────────────────────────
+     部分内核不支持 flex 布局的 gap（汉堡按钮塌成一条杠就是这么来的）。
+     做法：先把 gap 归零，再统一用 margin 撑开 —— 这样新旧内核
+     算出来的间距完全一致，不会在新浏览器上翻倍。 */
+
+  .btnrow{gap:0;margin-top:26px}
+  .btnrow>*{margin-right:10px;margin-bottom:10px}
+
+  .chips{gap:0;margin-top:12px}
+  .chips li{margin-right:8px;margin-bottom:8px}
+
+  .filters{gap:0}
+  .filters button{margin-right:8px;margin-bottom:8px}
+
+  .dots{gap:0}
+  .dots button{margin-left:4px;margin-right:4px}
+
+  .rel .meta{gap:0}
+  .rel .meta>*{margin-right:22px;margin-bottom:4px}
+
+  .docmeta,.post-meta,.libstat{gap:0}
+  .docmeta>*,.post-meta>*,.libstat>*{margin-right:22px;margin-bottom:4px}
+
+  .fmast{gap:0}
+  .fmast>*{margin-bottom:18px}
+
+  .fqr-hd{gap:0}
+  .fqr-hd>span:first-child{margin-right:12px}
+
+  /* 二维码与说明文字：不支持 gap 时会贴在一起 */
+  .fqr-grid figure{gap:0}
+  .fqr-grid figure>img{margin-right:13px}
+
+  /* 问题清单的小图标与标题：同上 */
+  .cmobile>div{gap:0}
+  .cmobile>div>i{margin-right:14px}
+
+  .lect summary{gap:0}
+  .lect summary>*{margin-right:11px}
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   2. 汉堡按钮：改用绝对定位画三条线
+   原写法靠 flex 的 gap 分开三条线，gap 不生效就叠成一条粗杠 ——
+   就是你看到的那个"横杠符号"。绝对定位不依赖任何新特性。
+   ══════════════════════════════════════════════════════════════ */
+
+@media (max-width:1080px){
+  .nav .burger{
+    display:block;
+    position:relative;
+    width:44px;height:44px;
+    padding:0;
+    border:1px solid var(--line2);
+    border-radius:10px;
+    background:none;
+    margin-left:8px;
+    flex-shrink:0;
+  }
+  .nav .burger i{
+    position:absolute;
+    left:13px;
+    width:18px;height:2px;
+    background:var(--ink);
+    border-radius:2px;
+    transition:top .2s,transform .2s,opacity .2s;
+  }
+  .nav .burger i:nth-child(1){top:14px}
+  .nav .burger i:nth-child(2){top:21px}
+  .nav .burger i:nth-child(3){top:28px}
+
+  .nav .burger[aria-expanded="true"] i:nth-child(1){top:21px;transform:rotate(45deg)}
+  .nav .burger[aria-expanded="true"] i:nth-child(2){opacity:0}
+  .nav .burger[aria-expanded="true"] i:nth-child(3){top:21px;transform:rotate(-45deg)}
+
+  /* 触屏点完不留橙色焦点框（键盘操作时仍保留） */
+  .nav .burger:focus:not(:focus-visible){outline:none}
+
+  /* 导航栏防挤压：品牌名可收缩，按钮和汉堡不许被压 */
   .nav .brand{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .navcta{margin-left:10px;flex:0 0 auto}
-  .burger{flex:0 0 auto}
-
-  /* ② “进入课程”按钮右侧是直角：桌面端右边接着下拉箭头段，
-        手机上箭头隐藏了，直角就裸露出来。补成四角圆角。 */
+  .navcta{flex:0 0 auto;margin-left:10px}
+  /* 桌面端按钮右侧接着下拉箭头段，手机上箭头隐藏了，直角会裸露 */
   .navcta>.nbtn{border-radius:10px;padding:11px 16px;font-size:14px}
-
-  /* ③ 汉堡点过之后橙色焦点框一直挂着（截图 1–5 都带着）。
-        触屏点按不画焦点框，键盘操作时仍保留（无障碍不受损）。 */
-  .burger:focus:not(:focus-visible){outline:none}
-
-  /* 汉堡三条线加粗一点，低倍缩放下不再糊成一团 */
-  .burger{width:44px;height:44px}
-  .burger i{height:2px}
 }
 
-/* 原样式的真 bug：≤1080px 显示汉堡，但抽屉 .sheet 在 ≥961px
-   就 display:none —— 961~1080px 区间点汉堡什么都弹不出来。 */
+/* 原样式的断点 bug：≤1080px 显示汉堡，但抽屉在 ≥961px 就 display:none，
+   961~1080px 这一段点汉堡什么都弹不出来 */
 @media (min-width:961px) and (max-width:1080px){
   .sheet{display:block}
 }
 
-@media (max-width:1080px){
-  .sheet{
-    overscroll-behavior:contain;   /* 抽屉滑到底别带着底下页面一起滚 */
-    padding-bottom:calc(60px + env(safe-area-inset-bottom));
+
+/* ══════════════════════════════════════════════════════════════
+   3. 字号层级：全部用固定 px，不经过 clamp / 变量
+   首屏标题只比正文大一点点，就是层级没建立起来。
+   ══════════════════════════════════════════════════════════════ */
+
+@media (max-width:900px){
+  :root{
+    --b1:16.5px; --b1lh:1.78;
+    --b2:15px;   --b2lh:1.70;
+    --t1:18px;
+    --t2:16.4px; --t2lh:1.76;
+    --lbl:12px;
   }
-  .sheet a{padding:14px 0}
-  .sheet .sbuy{padding:16px}
+
+  /* 首屏大标题：约为正文的 2 倍，层级才立得住 */
+  .hero h1{font-size:32px;line-height:1.30;max-width:none;letter-spacing:-.01em}
+  .hero--page h1{font-size:29px;line-height:1.32;max-width:none}
+  .hero .sub{font-size:16.4px;line-height:1.78;max-width:none;margin-top:20px}
+
+  /* 章节标题 */
+  h2.h{font-size:25px;line-height:1.36;max-width:none}
+  h3.h{font-size:20px;line-height:1.46}
+  .lede{font-size:16.4px;line-height:1.78;max-width:none;margin-top:14px}
+  .prose{font-size:16.4px;line-height:1.82;max-width:none}
+
+  .ccenter h2{font-size:25px;line-height:1.34}
+  .ccenter p{font-size:15.4px;line-height:1.76;margin-top:14px}
+
+  /* 长文 / 文章页 */
+  .post-hd h1{font-size:28px;line-height:1.34}
+  .post-hd .dek{font-size:16.6px;line-height:1.8;margin-top:16px}
+  .art h2{font-size:23px;line-height:1.42;margin:44px 0 16px;scroll-margin-top:78px}
+  .art h3{font-size:17.5px}
+  .art p{font-size:16.8px;line-height:1.86;margin-bottom:18px}
+  .art ol,.art ul{font-size:16.4px;line-height:1.86;margin-left:19px}
+  .art .big{font-size:19px;line-height:1.62;padding-left:16px;margin:26px 0}
+  .body h2{font-size:22px;line-height:1.45;margin:44px 0 16px}
+  .body h3{font-size:18px}
+  .body p{font-size:17px;line-height:1.86;margin-bottom:20px}
+  .body ul,.body ol{font-size:16.6px;line-height:1.86;margin-left:19px}
+  .body blockquote{font-size:18px;line-height:1.68;padding-left:16px;margin:26px 0}
+
+  [id]{scroll-margin-top:78px}
 }
 
 
-/* ═══ 2. 触屏设备：清掉“点完不松手”的 hover 残留 ═══════════
-   手机上 :hover 会在点击后卡住 —— 卡片浮起来不落回去、
-   列表项永久缩进。改用 :active 做点按反馈。 */
+/* ══════════════════════════════════════════════════════════════
+   4. 触屏：清掉点完不复位的 hover 残留
+   ══════════════════════════════════════════════════════════════ */
 
 @media (hover:none){
-  .icard:hover,
-  .rel:hover,
-  .rcard:hover,
-  .qrcard:hover,
-  .fqr-grid figure:hover img{transform:none}
-
-  .res:hover,
-  .pitem:hover,
-  .nextup a:hover,
-  .lect summary:hover{padding-left:0}
-
-  .res:hover::before,
-  .pitem:hover::before{transform:scaleY(0)}
-
-  .icard:hover .vis--img img,
-  .rel:hover .art{transform:none}
-
+  .icard:hover,.rel:hover,.rcard:hover,.qrcard:hover{transform:none}
+  .icard:hover .vis--img img,.rel:hover .art{transform:none}
+  .res:hover,.pitem:hover,.nextup a:hover,.lect summary:hover{padding-left:0}
+  .res:hover::before,.pitem:hover::before{transform:scaleY(0)}
   .res:active,.pitem:active,.nextup a:active{background:rgba(20,20,19,.035)}
-
   a,button,summary{-webkit-tap-highlight-color:rgba(217,119,87,.14)}
 }
 
 
-/* ═══ 3. 字号与行距：手机上的正文可读性 ═══════════════════
-   禁掉浏览器乱放大之后，由我们自己给手机端一档合适的字阶。
-   改动都在 ±6% 以内；嫌大嫌小只动这几个数字即可。 */
-
-@media (max-width:900px){
-  :root{
-    --b1:16.5px;  --b1lh:1.78;    /* 正文，原 15.8/1.82，中文手机上偏小 */
-    --b2:15px;    --b2lh:1.70;
-    --t1:18px;
-    --t2:16.4px;  --t2lh:1.76;    /* 导语，原 clamp 在窄屏落到 15.5px */
-    --lbl:12px;
-    --pad:20px;
-  }
-
-  /* 刘海屏横屏时的左右安全区 */
-  .wrap{
-    padding-left:calc(var(--pad) + env(safe-area-inset-left));
-    padding-right:calc(var(--pad) + env(safe-area-inset-right));
-  }
-
-  /* 锚点跳转别被吸顶导航（手机 64px）盖住标题 */
-  [id]{scroll-margin-top:78px}
-  .art h2,.body h2{scroll-margin-top:78px}
-
-  /* 长文正文 */
-  .art p{font-size:16.8px;line-height:1.86}
-  .art ol,.art ul{font-size:16.4px;line-height:1.86;margin-left:19px}
-  .art h3{font-size:17.5px}
-  .art .big{font-size:19px;padding-left:16px;margin:26px 0}
-
-  .body p{font-size:17px;line-height:1.86;margin-bottom:20px}
-  .body ul,.body ol{font-size:16.6px;line-height:1.86;margin-left:19px}
-  .body h3{font-size:18px}
-  .body blockquote{font-size:18px;padding-left:16px;margin:26px 0}
-  .body img{margin:24px 0}
-
-  .prose{line-height:1.80}
-}
-
-
-/* ═══ 4. 竖向节奏：手机上少滚 20% ═══════════════════════════
-   桌面上的大留白搬到 6 寸屏上就是“一直在划空白”。 */
+/* ══════════════════════════════════════════════════════════════
+   5. 组件适配
+   ══════════════════════════════════════════════════════════════ */
 
 @media (max-width:760px){
-  .sec{padding-block:48px}
-  .hero{padding-block:44px 34px}
-  .hero--page{padding-block:38px 28px}
+
   .panel{padding:24px 20px;border-radius:16px;margin-top:32px}
 
-  .rows,.tiers,.rules,.levels,.reslist,.faq,.stats,
-  .rcards,.rels,.infra,.conseq,.grid3,.modblk{margin-top:30px}
-
-  .post-hd{padding-block:36px 6px}
-  .body{padding-block:32px 6px}
-
-  /* 首屏按钮行（截图 7）：略收紧，两个按钮并排不顶边 */
-  .btnrow{gap:10px;margin-top:26px}
-  .btn{padding:12px 20px;font-size:14.6px}
-}
-
-
-/* ═══ 5. 组件适配：窄屏下被挤扁 / 溢出的那些 ═══════════════ */
-
-@media (max-width:760px){
-
-  /* ── 数字条 ── */
-  .stats{grid-template-columns:repeat(2,1fr)}
+  /* 数字条 */
+  .stats{grid-template-columns:repeat(2,1fr);margin-top:32px}
   .stat{padding:18px 14px}
   .stat b{font-size:24px}
   .stat span{font-size:11.8px;margin-top:5px}
 
-  /* ── 资源清单（截图 3）：标题被右侧分类标签挤成竖条。
-        改为标题一行、分类小字第二行，箭头右侧居中。 ── */
+  /* 资源清单：标题与分类标签互相挤压，改成上下两行 */
   .res{
     display:grid;
     grid-template-columns:minmax(0,1fr) auto;
@@ -195,114 +254,62 @@ p,li,td,th,h1,h2,h3,h4,summary,figcaption,.lede,.prose,.fbot{
   .res .cat{grid-column:1;grid-row:2;font-size:10.6px}
   .res .ar{grid-column:2;grid-row:1 / span 2}
 
-  /* ── Release 卡 / 基础设施卡 ── */
-  .rel .art{height:132px}
-  .rel .in{padding:20px 20px 22px}
-  .rel h3{font-size:18.5px}
-  .rel .meta{gap:16px;flex-wrap:wrap;margin-top:16px}
-
-  .rcard{padding:24px 20px 22px;border-radius:16px}
-  .rcard h3{font-size:20px}
-  .rcard>p{font-size:14.8px}
-  .rcard .rmeta{margin-top:18px}
-  .rcard .rmeta div{font-size:12.8px;padding:10px 0}
-  .rcard .rbtn{padding:12px 18px;font-size:14px}
-
-  .icard .txt{padding:22px 20px 24px}
-  .icard h3{font-size:19.5px}
-
-  .g3{padding:26px 20px 28px}
-  .cq{padding-top:18px}
-  .cq h3{font-size:18.5px}
-
-  /* ── 条款块 / 分级块：原样式没做窄屏处理，
-        56px 的编号列在 390px 屏上白占 15% 宽度 ── */
+  /* 条款块：原样式没做窄屏处理，56px 编号列白占宽度 */
   .rule{grid-template-columns:1fr;gap:7px;padding:22px 0}
   .rule .no{padding-top:0}
   .rule p{font-size:15px}
   .rule .why{font-size:13.6px}
 
-  .lvl{padding:22px 20px 24px;border-radius:12px}
-  .lvl p{font-size:14.8px}
-  .tier p{font-size:14.8px}
+  /* 卡片 */
+  .rcards,.rels,.infra,.conseq,.grid3{margin-top:30px}
+  .rcard{padding:24px 20px 22px;border-radius:16px}
+  .rcard h3{font-size:20px}
+  .rcard>p{font-size:14.8px}
+  .rcard .rmeta div{font-size:12.8px;padding:10px 0}
+  .rcard .rbtn{padding:12px 18px;font-size:14px}
+  .icard .txt{padding:22px 20px 24px}
+  .icard h3{font-size:19.5px}
+  .rel .art{height:132px}
+  .rel .in{padding:20px 20px 22px}
+  .rel h3{font-size:18.5px}
+  .g3{padding:26px 20px 28px}
+  .cq h3{font-size:19px}
+  .cq p{font-size:14.8px}
+  .lvl{padding:22px 20px 24px}
 
-  /* ── FAQ ── */
-  .faq summary{padding:17px 0;font-size:16px;gap:14px}
-  .faq .a{font-size:15.4px;line-height:1.82;padding-bottom:19px}
+  /* 问题清单（手机版星座区）*/
+  .cmobile{margin-top:30px}
+  .cmobile>div{padding:15px 0}
+  .cmobile b{font-size:16px}
+  .cmobile small{font-size:13.4px}
 
-  /* ── 筛选按钮：保证 40px 触控高度 ── */
-  .filters{gap:8px;padding-bottom:26px;margin-top:28px}
+  /* FAQ / 筛选 / 目录 */
+  .faq summary{padding:17px 0;font-size:16px}
+  .faq .a{font-size:15.4px;line-height:1.82}
   .filters button{padding:10px 16px;font-size:14px;min-height:40px}
-
-  /* ── 课程目录 ── */
-  .lect summary{padding:15px 0;gap:11px;flex-wrap:wrap}
-  .lect .lt{font-size:15.8px;flex:1 1 auto;min-width:0}
-  .lect .ln{font-size:12px}
-  .lect .lc{font-size:12px}
+  .lect summary{padding:15px 0;flex-wrap:wrap}
+  .lect .lt{font-size:15.8px;min-width:0}
   .lnodes li{font-size:14.2px}
 
-  /* ── 价格 / 购买条 ── */
+  /* 价格 / 文中卡片 / 列表 */
   .pricebox{padding:26px 22px;border-radius:16px}
   .pricebox .amt{font-size:46px}
-  .pricebox li{font-size:14.6px;padding:8px 0}
   .buybar{padding:26px 22px;border-radius:16px}
-  .buybar h3{font-size:20px}
   .buybar .amt{font-size:34px}
-
-  /* ── 文中卡片 ── */
   .inline-cta{padding:20px 18px;margin:32px 0}
   .magnet{padding:24px 20px}
   .notice{padding:16px 18px;font-size:14px;line-height:1.75}
-  .author{padding:22px 20px;gap:20px}
-  .chips li{font-size:13px;padding:5px 12px}
-
-  /* ── 文章列表 ── */
+  .author{padding:22px 20px}
   .pitem{padding:24px 0}
   .pitem h3{font-size:19px}
   .pitem p{font-size:14.8px}
-  .libstat{gap:16px 24px;padding:16px 0}
-  .libstat b{font-size:20px}
 
-  /* ── 元信息行 ── */
-  .docmeta,.post-meta{gap:8px 22px}
-  .post-meta{margin-top:24px;padding:15px 0}
-  .docmeta{padding:16px 0;margin-bottom:32px}
-
-  /* ── 星球入口 ── */
+  /* 星球入口 */
   .planetcta{margin-top:32px;border-radius:16px}
   .planetcta .pc-txt{padding:26px 20px 28px}
   .planetcta .pc-vis{min-height:180px}
-  .planetcta .pstats{gap:22px;margin-top:20px}
 
-  /* ── 星座区（手机上是问题清单形态，截图 5）── */
-  .cpanel{padding-block:44px}
-  .ccenter h2{line-height:1.36}
-  .ccenter p{font-size:15px;margin-top:14px}
-  .ccenter .cbtn{padding:12px 22px}
-  .cmobile{margin-top:32px}
-  .cmobile>div{padding:15px 0;gap:13px}
-}
-
-
-/* ═══ 6. 目录：手机上别在正文前堆一面链接墙 ═══════════════ */
-
-@media (max-width:900px){
-  .toc{
-    border-left:none;
-    border-top:1px solid var(--line2);
-    border-bottom:1px solid var(--line2);
-    padding:14px 0 12px;
-    margin-bottom:24px;
-  }
-  .toc a{padding:7px 0;font-size:14px}
-}
-
-
-/* ═══ 7. 表格：加“还能往右滑”的视觉提示 ═══════════════════
-   .tbl 本来就能横向滚动，但手机上完全看不出来，
-   用户以为表格就这么宽，右边几列等于不存在。 */
-
-@media (max-width:760px){
+  /* 表格：加"还能往右滑"的提示，否则右边几列等于不存在 */
   .tbl{
     background:
       radial-gradient(farthest-side at 0    50%, rgba(20,20,19,.11), transparent) left  / 13px 100% no-repeat,
@@ -310,66 +317,32 @@ p,li,td,th,h1,h2,h3,h4,summary,figcaption,.lede,.prose,.fbot{
     -webkit-overflow-scrolling:touch;
   }
   .tbl table{min-width:540px;font-size:13.6px}
-  .tbl th{padding:11px 12px;font-size:12.6px}
-  .tbl td{padding:11px 12px}
-  .tbl td.rmk{font-size:12.8px}
-}
+  .tbl th,.tbl td{padding:11px 12px}
 
-
-/* ═══ 8. 轮播与灯箱 ═══════════════════════════════════════ */
-
-@media (max-width:760px){
-  .carousel,.slidecar{margin-top:30px}
-
+  /* 轮播圆点只有 7px，按不准 —— 伪元素扩大热区，外观不变 */
+  .dots button{position:relative}
+  .dots button::before{content:"";position:absolute;top:-14px;right:-8px;bottom:-14px;left:-8px}
   .cnav{width:38px;height:38px;font-size:18px}
   .cnav.prev{left:9px}
   .cnav.next{right:9px}
 
-  /* 翻页圆点只有 7px，手指按不准 —— 伪元素扩大热区，外观不变 */
-  .dots{gap:6px;margin-top:16px}
-  .dots button{position:relative}
-  .dots button::before{content:"";position:absolute;inset:-14px -8px}
-
-  .slide figcaption{padding:15px 18px 18px;font-size:14px}
-  .slide figcaption b{font-size:15px}
-
-  .lb{padding:14px}
-  .lb img,.lb .ph{max-height:70vh;max-height:70dvh}
-  .lbx{top:10px;right:12px;width:40px;height:40px;font-size:20px}
-  .lb figcaption{font-size:13.6px;margin-top:14px}
-}
-
-
-/* ═══ 9. 页脚（截图 1、2）══════════════════════════════════
-   字体放大禁掉后尺寸会先自然回落一大截，这里再按手机收一档。 */
-
-@media (max-width:760px){
-  .foot{padding-block:48px calc(32px + env(safe-area-inset-bottom))}
-  .fmast{gap:18px;padding-bottom:32px;margin-bottom:32px}
+  /* 页脚 */
+  .fmast{padding-bottom:32px;margin-bottom:32px}
   .fmast .fb{font-size:22px}
-  .fmast .fs{font-size:14.4px}
-  .fgrid{grid-template-columns:repeat(2,1fr);gap:26px 18px}
+  .fgrid{grid-template-columns:repeat(2,1fr)}
   .fcol a,.fcol span{font-size:14px;padding:5px 0}
   .fbot{margin-top:36px;padding-top:22px;font-size:12.6px;line-height:1.9}
-
-  /* “找到我们”二维码区：提示语允许换行，不再顶出屏幕右缘 */
-  .fqr{padding-bottom:32px;margin-bottom:32px}
-  .fqr--bottom{padding-top:30px;margin-top:28px}
-  .fqr-hd{row-gap:5px}
   .fqr-tip{font-size:12.2px}
-  .fqr-grid{gap:14px}
 }
 
 
-/* ═══ 10. 超窄屏（iPhone SE / mini 一档）═════════════════════ */
+/* ═══ 6. 超窄屏（iPhone SE / mini 一档）══════════════════════ */
 
 @media (max-width:400px){
   .nav .brand{font-size:18px;margin-right:4px}
-  .navcta{margin-left:8px}
   .navcta>.nbtn{padding:11px 13px;font-size:13.5px}
-  .burger{margin-left:6px}
-
-  :root{--pad:17px}
+  .hero h1{font-size:29px}
   .stats{grid-template-columns:1fr}
-  .rel .meta{gap:12px}
+  .wrap{padding-left:17px;padding-right:17px}
+  .cpanel{padding-left:17px;padding-right:17px}
 }
